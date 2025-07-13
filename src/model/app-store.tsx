@@ -6,7 +6,7 @@ import { nanoid } from "nanoid";
 
 interface AppState {
   code: string;
-  activeTestId: string;
+  selectedTestId: string;
   tests: Test[];
 
   changeCode: (code: string) => void;
@@ -14,9 +14,10 @@ interface AppState {
   deleteTest: (deleteId: Test["id"]) => void;
   resetTests: () => void;
   selectTest: (testId: Test["id"]) => void;
+  changeSelectedTest: (data: Partial<Omit<Test, "id">>) => void;
 }
 
-const createTest = (): Test => ({ id: nanoid(), input: "" });
+const createTest = (): Test => ({ id: nanoid(), input: "", output: "" });
 
 export const useAppStore = create<AppState>()(
   persist(
@@ -25,7 +26,7 @@ export const useAppStore = create<AppState>()(
 
       return {
         code,
-        activeTestId: initialTest.id,
+        selectedTestId: initialTest.id,
         tests: [initialTest],
 
         changeCode: (code) => set({ code }),
@@ -34,7 +35,7 @@ export const useAppStore = create<AppState>()(
           const test = createTest();
           set((state) => ({
             tests: [...state.tests, test],
-            activeTestId: test.id,
+            selectedTestId: test.id,
           }));
         },
 
@@ -45,23 +46,33 @@ export const useAppStore = create<AppState>()(
 
           if (deleteIndex === -1) return;
 
-          let { activeTestId } = get();
+          let { selectedTestId: activeTestId } = get();
           if (tests[deleteIndex].id === activeTestId) {
             activeTestId = tests[deleteIndex === 0 ? 1 : deleteIndex - 1].id;
           }
 
           set({
             tests: tests.filter((test) => test.id !== deleteId),
-            activeTestId,
+            selectedTestId: activeTestId,
           });
         },
 
         resetTests: () => {
           const newTest = createTest();
-          set({ tests: [newTest], activeTestId: newTest.id });
+          set({ tests: [newTest], selectedTestId: newTest.id });
         },
 
-        selectTest: (activeTestId) => set({ activeTestId }),
+        selectTest: (activeTestId) => set({ selectedTestId: activeTestId }),
+
+        changeSelectedTest: (data) => {
+          set((state) => {
+            return {
+              tests: state.tests.map((test) =>
+                test.id === state.selectedTestId ? { ...test, ...data } : test
+              ),
+            };
+          });
+        },
       };
     },
     {

@@ -4,7 +4,7 @@ import { useAppStore } from "../model/app-store";
 
 export const TestsControls: FC = () => {
   const tests = useAppStore((state) => state.tests);
-  const activeTestId = useAppStore((state) => state.activeTestId);
+  const activeTestId = useAppStore((state) => state.selectedTestId);
 
   const addTest = useAppStore((state) => state.addTest);
   const deleteTest = useAppStore((state) => state.deleteTest);
