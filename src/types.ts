@@ -1,5 +1,6 @@
 export interface Test {
   id: string;
   input: string;
-  output: string;
+  expectedOutput: string;
+  result: string | null;
 }

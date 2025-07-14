@@ -1,4 +1,4 @@
-import { Box, Card, CssBaseline, Grid, Paper } from "@mui/material";
+import { Box, CssBaseline, Grid, Paper } from "@mui/material";
 import { type FC } from "react";
 import { TestsControls } from "./components/tests-controls";
 import { CodeArea } from "./components/code-area";
@@ -17,6 +17,7 @@ export const App: FC = () => (
         sx={{
           overflow: "auto",
           height: "100vh",
+          p: 1,
         }}
       >
         <Paper

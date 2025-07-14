@@ -8,6 +8,7 @@ interface AppState {
   code: string;
   selectedTestId: string;
   tests: Test[];
+  isResultInputCollapsed: boolean;
 
   changeCode: (code: string) => void;
   addTest: () => void;
@@ -15,9 +16,16 @@ interface AppState {
   resetTests: () => void;
   selectTest: (testId: Test["id"]) => void;
   changeSelectedTest: (data: Partial<Omit<Test, "id">>) => void;
+  changeTests: (tests: Test[]) => void;
+  toggleIsResultInputCollapsed: () => void;
 }
 
-const createTest = (): Test => ({ id: nanoid(), input: "", output: "" });
+const createTest = (): Test => ({
+  id: nanoid(),
+  input: "",
+  expectedOutput: "",
+  result: null,
+});
 
 export const useAppStore = create<AppState>()(
   persist(
@@ -28,6 +36,7 @@ export const useAppStore = create<AppState>()(
         code,
         selectedTestId: initialTest.id,
         tests: [initialTest],
+        isResultInputCollapsed: false,
 
         changeCode: (code) => set({ code }),
 
@@ -73,6 +82,13 @@ export const useAppStore = create<AppState>()(
             };
           });
         },
+
+        changeTests: (tests) => set({ tests }),
+
+        toggleIsResultInputCollapsed: () =>
+          set((state) => ({
+            isResultInputCollapsed: !state.isResultInputCollapsed,
+          })),
       };
     },
     {

@@ -1,6 +1,15 @@
-import { Chip, Stack } from "@mui/material";
+import { Chip, Stack, type ChipProps } from "@mui/material";
 import type { FC } from "react";
 import { useAppStore } from "../model/app-store";
+import type { Test } from "../types";
+
+const getTestColor = (test: Test): ChipProps["color"] => {
+  if (test.result === null) {
+    return "default";
+  }
+
+  return test.result === test.expectedOutput ? "success" : "error";
+};
 
 export const TestsControls: FC = () => {
   const tests = useAppStore((state) => state.tests);
@@ -20,6 +29,7 @@ export const TestsControls: FC = () => {
           onDelete={tests.length > 1 ? () => deleteTest(test.id) : undefined}
           onClick={() => selectTest(test.id)}
           variant={activeTestId === test.id ? "filled" : "outlined"}
+          color={getTestColor(test)}
         />
       ))}
       <Stack direction="row" gap={1} flexWrap="wrap">
