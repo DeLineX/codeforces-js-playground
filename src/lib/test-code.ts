@@ -36,16 +36,15 @@ const runTest = (code: string, test: Test) => {
     result += `${args.join(" ")}\n`;
   };
 
-  const PREVENT_BUNDLER_REMOVE = () => {};
-
-  const console = { log, PREVENT_BUNDLER_REMOVE };
+  const console = { log };
 
   eval(code);
 
   process.stdin.trigger("data", test.input);
   process.stdin.trigger("end", "");
 
-  console.PREVENT_BUNDLER_REMOVE();
+  console.log();
+  result = result.slice(0, -1);
 
   return result;
 };
