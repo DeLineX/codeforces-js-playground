@@ -31,18 +31,21 @@ const runTest = (code: string, test: Test) => {
   const process = { stdin };
 
   let result = "";
+
   const log = (...args: unknown[]) => {
     result += `${args.join(" ")}\n`;
   };
 
-  // @ts-expect-error expected error
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const console = { log };
+  const PREVENT_BUNDLER_REMOVE = () => {};
+
+  const console = { log, PREVENT_BUNDLER_REMOVE };
 
   eval(code);
 
   process.stdin.trigger("data", test.input);
   process.stdin.trigger("end", "");
+
+  console.PREVENT_BUNDLER_REMOVE();
 
   return result;
 };
