@@ -109,7 +109,7 @@ export const SelectedTest: FC = () => {
           const isLinesEqual = resultLine === expectedLine;
 
           return (
-            <Box>
+            <Box key={index}>
               <Tooltip
                 title={
                   expectedLine !== undefined
@@ -127,13 +127,11 @@ export const SelectedTest: FC = () => {
         })}
         {expectedOutputLines
           .slice(resultLines.length - 1)
-          .map((expectedLine) => {
-            return (
-              <Tooltip title="Not in result" placement="left">
-                <Box color="lightgray">{expectedLine}</Box>
-              </Tooltip>
-            );
-          })}
+          .map((expectedLine, index) => (
+            <Tooltip title="Not in result" placement="left" key={index}>
+              <Box color="lightgray">{expectedLine}</Box>
+            </Tooltip>
+          ))}
         <TextField
           label="Expected output"
           multiline
@@ -151,8 +149,6 @@ export const SelectedTest: FC = () => {
       </>
     );
   };
-
-  console.log(selectedTest);
 
   return selectedTest.result === null
     ? renderNotStartedTest()
