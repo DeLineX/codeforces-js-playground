@@ -20,17 +20,23 @@ interface AppState {
   toggleIsResultInputCollapsed: () => void;
 }
 
-const createTest = (): Test => ({
+const createTest = ({
+  input = "",
+  expectedOutput = "",
+}: Partial<Pick<Test, "input" | "expectedOutput">> = {}): Test => ({
   id: nanoid(),
-  input: "",
-  expectedOutput: "",
+  input,
+  expectedOutput,
   result: null,
 });
 
 export const useAppStore = create<AppState>()(
   persist(
     (set, get) => {
-      const initialTest = createTest();
+      const initialTest = createTest({
+        input: `-1 0 1 2 3\n5`,
+        expectedOutput: "Numbers multiplied by 5: -5,0,5,10,15\n",
+      });
 
       return {
         code,
